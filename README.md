@@ -128,6 +128,10 @@ guest.close()
 
 ## Architecture
 
+For the complete system overview—with architecture and sequence diagrams,
+protocol layering, group routing, transfers, and security boundaries—see
+[`ARCHITECTURE.md`](ARCHITECTURE.md).
+
 - `bluetooth/base.py` defines the asynchronous, platform-neutral transport,
   device, connection, capability, and pairing-result contracts.
 - `bluetooth/bleak_central.py` provides BLE scanning and client connections.

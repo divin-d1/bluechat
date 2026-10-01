@@ -28,8 +28,9 @@ a 10-byte BlueChat header and up to 10 bytes of application packet data per
 fragment, which is conservative and compatible with that baseline. Client writes
 use write-with-response; host TX is indication-only so GATT confirmation
 provides backpressure for each fragment. This is intentionally reliable but
-slow. Future file transfer needs negotiated limits, a bounded priority queue,
-and throughput tests before changing fragment sizes.
+slow. File transfers use bounded chunks and acknowledgement-based backpressure
+above this transport; physical throughput still needs testing before changing
+fragment sizes.
 
 Reassembly permits out-of-order chunks, caps concurrent incomplete frames, and
 rejects conflicting duplicates and invalid headers. BlueChat's own 4-byte frame
@@ -39,8 +40,10 @@ refused before transmission.
 
 GATT indications and subscriptions can be shared by connected centrals on the
 Linux server, but actual simultaneous peer counts depend on the controller and
-BlueZ. The current backend sets a software ceiling of four guests, subject to
-hardware verification. Host group routing is not implemented yet.
+BlueZ. The current backend sets a software ceiling of four guests (five total
+participants including the host), subject to hardware verification. Group
+message routing and per-recipient group file relay are implemented above the
+transport. Hardware limits and throughput have not been verified.
 
 ## Backend roles
 
