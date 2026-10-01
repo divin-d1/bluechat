@@ -1823,28 +1823,29 @@ async def _doctor(service: BlueChat) -> None:
     table.add_row("Platform", "Info", f"{platform.system()} ({platform.platform()})")
     table.add_row("Python", "Info", platform.python_version())
     table.add_row("Backend", "Info", type(transport).__name__)
-    table.add_row("Bluetooth adapter", "✓" if available else "!", available_detail)
-    table.add_row("Bluetooth state", "✓" if enabled else "!", enabled_detail)
+    # ASCII status labels also work when Windows pipes use a legacy code page.
+    table.add_row("Bluetooth adapter", "OK" if available else "WARN", available_detail)
+    table.add_row("Bluetooth state", "OK" if enabled else "WARN", enabled_detail)
     capabilities = transport.capabilities
     table.add_row(
         "Discovery",
-        "✓" if capabilities.discovery else "—",
+        "OK" if capabilities.discovery else "N/A",
         "Supported" if capabilities.discovery else "Unsupported",
     )
     table.add_row(
         "Hosting",
-        "✓" if capabilities.hosting else "—",
+        "OK" if capabilities.hosting else "N/A",
         "Supported" if capabilities.hosting else "Unsupported by this backend",
     )
     table.add_row(
         "Advertising",
-        "✓" if capabilities.advertising else "—",
+        "OK" if capabilities.advertising else "N/A",
         "Supported" if capabilities.advertising else "Unsupported by this backend",
     )
-    table.add_row("Encryption", "✓", "cryptography / AES-GCM")
+    table.add_row("Encryption", "OK", "cryptography / AES-GCM")
     table.add_row(
         "Username",
-        "✓" if service.username else "!",
+        "OK" if service.username else "WARN",
         service.username or "Not configured; launch bluechat to choose one",
     )
     console.print(table)

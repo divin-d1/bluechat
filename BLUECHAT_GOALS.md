@@ -239,9 +239,9 @@ Acceptance criteria:
 - [ ] CI completes install, Ruff, mypy, tests, package build, and CLI smoke commands on Linux, Windows, and macOS.
 - [x] Workflow configuration is valid and all locally available checks pass.
 
-Tests: `.github/workflows/ci.yml` runs an Ubuntu/Windows/macOS × Python 3.10/3.12 matrix. Mypy and pytest passed across the matrix on run `36833658575`; builds passed on all jobs. Both Windows jobs failed the combined CLI smoke step, so the smoke commands are now separate for precise attribution.
-Notes: mypy has targeted `dbus_next` overrides, and the Linux-only lifecycle test skips when that platform dependency is absent. Local full tests (60), Ruff, and mypy pass. Need diagnose Windows CLI command and obtain a green hosted rerun before marking DONE.
-Blockers: Windows smoke command diagnosis and green hosted results are required.
+Tests: `.github/workflows/ci.yml` runs an Ubuntu/Windows/macOS × Python 3.10/3.12 matrix. Run `36833658575` passed mypy, pytest, and builds everywhere; run `36834962327` isolated both Windows failures to `bluechat doctor`. A local `PYTHONIOENCODING=cp1252` reproduction exposed Rich's inability to encode the checkmark status glyph. The doctor now uses ASCII status labels, and a CP1252-output regression test passes.
+Notes: mypy has targeted `dbus_next` overrides, and the Linux-only lifecycle test skips when that platform dependency is absent. Local full tests (61), Ruff, and mypy pass. Latest fix is pushed; waiting for hosted green results.
+Blockers: green hosted results for the diagnostic-output fix are required. GitHub job-log download returns HTTP 403, so exact Windows output was not directly accessible.
 
 ### G19 Type-check validation
 

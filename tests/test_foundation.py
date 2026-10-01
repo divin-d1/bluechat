@@ -1287,6 +1287,33 @@ def test_doctor_bounds_native_adapter_probes(tmp_path: Path, monkeypatch, capsys
     assert "TimeoutError" in capsys.readouterr().out
 
 
+def test_doctor_renders_with_legacy_windows_encoding(tmp_path: Path, monkeypatch) -> None:
+    import asyncio
+    import io
+    import bluechat.cli as cli_module
+    from rich.console import Console
+    from bluechat.bluetooth.manager import BluetoothManager
+
+    output = io.BytesIO()
+    text_output = io.TextIOWrapper(output, encoding="cp1252")
+    monkeypatch.setattr(cli_module, "console", Console(file=text_output, width=120))
+
+    async def run() -> None:
+        service = BlueChat(
+            "Divin",
+            config_manager=ConfigManager(tmp_path / "doctor-legacy.toml"),
+            bluetooth=BluetoothManager(FakeBluetoothBackend()),
+        )
+        await cli_module._doctor(service)
+
+    asyncio.run(run())
+    text_output.flush()
+    rendered = output.getvalue().decode("cp1252")
+    assert "BlueChat Diagnostics" in rendered
+    assert "Bluetooth adapter" in rendered
+    text_output.close()
+
+
 def test_bluez_adapter_detection_and_powered_state_use_dbus(monkeypatch) -> None:
     pytest.importorskip("dbus_next")
     import asyncio
