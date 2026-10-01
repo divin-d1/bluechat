@@ -84,6 +84,8 @@ show_error_codes = true
 module = [
   "bleak.*",
   "spake2",
+  "dbus_next",
+  "dbus_next.*",
   "tomli",
   "tomllib",
   "winrt.*",

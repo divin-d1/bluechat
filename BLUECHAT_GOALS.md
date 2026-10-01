@@ -4,11 +4,11 @@ This tracker is authoritative for V1 software work. `DONE` requires passing auto
 
 ## Progress
 
-- Software goals DONE: 24 / 24 (100%).
+- Software goals DONE: 22 / 24 (91.7%); G18 and G24 are in progress while the cross-platform CI regression is fixed and rerun.
 - Physical hardware validation: separately tracked; no combination may be inferred as passed.
 - Latest full local test run: 60 passed (2026-10-01). `ruff check .` and `mypy src/bluechat` pass.
 - Wheel and sdist rebuilt from the current tree; clean dependency-resolving installs and installed CLI smoke checks (`--version`, `--help`, `doctor`) pass on Intel macOS / Python 3.11.
-- GitHub-hosted CI cannot be triggered from this workspace; cross-platform CI execution remains pending.
+- The latest hosted CI run passed Ubuntu 3.10 and 3.12 and failed mypy on macOS and Windows because `dbus_next` was missing from platform-neutral import overrides.
 
 ## Goals
 
@@ -233,15 +233,15 @@ Blockers: none identified.
 
 ### G18 Cross-platform CI validation
 
-Status: DONE
+Status: IN_PROGRESS
 
 Acceptance criteria:
-- [x] CI runs install, Ruff, mypy, tests, package build, and CLI smoke commands on Linux, Windows, and macOS.
+- [ ] CI completes install, Ruff, mypy, tests, package build, and CLI smoke commands on Linux, Windows, and macOS.
 - [x] Workflow configuration is valid and all locally available checks pass.
 
-Tests: `.github/workflows/ci.yml` has an Ubuntu/Windows/macOS × Python 3.10/3.12 matrix. Workflow-equivalent Ruff, mypy, pytest (60 tests), build, and installed CLI smoke checks passed locally on Intel macOS.
-Notes: no `.git` repository or remote is present in this workspace, so hosted CI jobs could not be triggered; Windows/Linux hosted runner results remain pending and are not claimed as passed.
-Blockers: none for CI configuration; remote execution requires a repository remote/CI service.
+Tests: `.github/workflows/ci.yml` has an Ubuntu/Windows/macOS × Python 3.10/3.12 matrix. The pushed run passed Ubuntu 3.10 and 3.12, but failed mypy on both macOS and Windows Python versions because `dbus_next` was missing from mypy's platform-neutral import overrides.
+Notes: targeted overrides for `dbus_next` and its submodules are now added. `mypy --python-executable /private/tmp/bluechat-terminal-wheel/bin/python src/bluechat` passes against a clean macOS dependency environment where `dbus_next` is absent; a new hosted matrix run is still required before marking DONE.
+Blockers: green hosted results for the rerun are required.
 
 ### G19 Type-check validation
 
@@ -306,13 +306,13 @@ Blockers: none for documentation as of this cycle.
 
 ### G24 Final release checklist
 
-Status: DONE
+Status: IN_PROGRESS
 
 Acceptance criteria:
-- [x] All implementable software goals are DONE.
+- [ ] All implementable software goals are DONE.
 - [x] Full tests, Ruff, mypy, wheel/sdist builds, package install smoke, and locally available CI-equivalent checks pass.
 - [x] Version is appropriate; do not call stable 1.0.0 while required security/hardware criteria are pending.
 
 Tests: `python3 -m pytest -q` — 60 passed, including `test_complete_group_transfer_reconnect_rotation_history_workflow`; `python3 -m ruff check .` — passed; `python3 -m mypy src/bluechat` — passed (42 package files); `python3 -m build --no-isolation` and `python3 -m twine check` — passed; clean `bluechat-terminal` wheel and sdist environments resolved dependencies and passed `bluechat --version`, `bluechat --help`, and `bluechat doctor`.
-Notes: `0.1.0` is an unpublished TestPyPI candidate named `bluechat-terminal` because the unrelated `bluechat` name is already taken on TestPyPI. PyPI's `bluechat` name was unclaimed when checked on 2026-10-01. Hosted cross-OS CI and nine physical Bluetooth combinations remain explicitly pending; this is not a stable V1 release recommendation.
-Blockers: TestPyPI and GitHub publication need account credentials; hosted CI execution and real Bluetooth hardware validation remain external release validation, not unfinished software goals.
+Notes: `0.1.0` is an unpublished TestPyPI candidate named `bluechat-terminal` because the unrelated `bluechat` name is already taken on TestPyPI. PyPI's `bluechat` name was unclaimed when checked on 2026-10-01. Hosted cross-OS CI currently has a known mypy configuration failure; nine physical Bluetooth combinations remain pending. This is not a stable V1 release recommendation.
+Blockers: TestPyPI publication needs account credentials; G18 must return green across all six CI jobs before this release checklist can be DONE. Real Bluetooth hardware validation remains separately pending.
