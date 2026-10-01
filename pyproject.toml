@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bluechat-terminal"
+version = "0.1.0"
+description = "Terminal-first Bluetooth chat for nearby computers"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "BlueChat contributors"}]
+urls = {Homepage = "https://github.com/divin-d1/bluechat", Repository = "https://github.com/divin-d1/bluechat", Issues = "https://github.com/divin-d1/bluechat/issues"}
+dependencies = [
+  # cryptography 49 dropped Intel macOS wheels; keep Intel Macs on v48 so a
+  # normal install does not require a local OpenSSL/Rust toolchain.
+  "cryptography>=42.0,<49; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+  "cryptography>=42.0; sys_platform != 'darwin' or platform_machine != 'x86_64'",
+  "spake2>=0.9",
+  "platformdirs>=4.2",
+  "rich>=13.7",
+  "typer>=0.12",
+  "tomli>=2.0; python_version < '3.11'",
+  "bleak>=1.0",
+  "dbus-next>=0.2.3; sys_platform == 'linux'",
+  "winrt-Windows.Devices.Bluetooth>=3.0; sys_platform == 'win32'",
+  "winrt-Windows.Devices.Bluetooth.GenericAttributeProfile>=3.0; sys_platform == 'win32'",
+  "winrt-Windows.Devices.Radios>=3.0; sys_platform == 'win32'",
+  "pyobjc-framework-CoreBluetooth>=10; sys_platform == 'darwin'",
+  "prompt-toolkit>=3.0",
+]
+
+[project.optional-dependencies]
+dev = ["build>=1.2", "pytest>=8.0", "ruff>=0.5", "mypy>=1.10"]
+
+[project.scripts]
+bluechat = "bluechat.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bluechat"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+  ".github",
+  "CHANGELOG.md",
+  "CONTRIBUTING.md",
+  "LICENSE",
+  "README.md",
+  "SECURITY.md",
+  "BLUECHAT_GOALS.md",
+  "docs",
+  "pyproject.toml",
+  "src",
+  "tests",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "B"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# dbus-next uses D-Bus signature strings as Python annotations; Ruff's parser
+# correctly cannot interpret signatures such as "a{sv}" as Python types.
+"src/bluechat/bluetooth/linux.py" = ["F821", "F722"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["typer.Option", "typer.Argument"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src/bluechat"]
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = [
+  "bleak.*",
+  "spake2",
+  "tomli",
+  "tomllib",
+  "winrt.*",
+  "CoreBluetooth",
+  "Foundation",
+  "libdispatch",
+]
+ignore_missing_imports = true
