@@ -28,8 +28,9 @@ jobs:
         run: pytest -q
       - name: Build wheel and source archive
         run: python -m build
-      - name: Verify installed command
-        run: |
-          bluechat --version
-          bluechat --help
-          bluechat doctor
+      - name: Verify installed version command
+        run: bluechat --version
+      - name: Verify installed help command
+        run: bluechat --help
+      - name: Verify installed diagnostics command
+        run: bluechat doctor
