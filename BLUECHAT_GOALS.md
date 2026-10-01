@@ -299,9 +299,10 @@ Status: DONE
 Acceptance criteria:
 - [x] README, SECURITY.md, changelog, and hardware testing guide accurately describe supported behavior and limitations.
 - [x] Group transfer, reconnection, group-host history, PAKE, CI/type-check, and package-install statuses match actual results.
+- [x] Architecture guide explains the layers, platform adapters, host/join lifecycle, group routing, transfers, and security boundaries.
 
-Tests: manual consistency review after latest tests/build/install; all nine hardware rows remain `NOT_RUN`.
-Notes: README and SECURITY identify live participant resume and the remaining host GATT service recovery limitation; CI and local platform validation are distinguished.
+Tests: manual consistency review and successful sdist build including `ARCHITECTURE.md`; all nine hardware rows remain `NOT_RUN`.
+Notes: README and SECURITY identify live participant resume and the remaining host GATT service recovery limitation; CI and local platform validation are distinguished. `ARCHITECTURE.md` includes Mermaid system and host/join sequence diagrams.
 Blockers: none for documentation as of this cycle.
 
 ### G24 Final release checklist

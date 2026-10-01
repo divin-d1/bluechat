@@ -41,6 +41,7 @@ packages = ["src/bluechat"]
 
 [tool.hatch.build.targets.sdist]
 only-include = [
+  "ARCHITECTURE.md",
   ".github",
   "CHANGELOG.md",
   "CONTRIBUTING.md",

@@ -47,7 +47,7 @@ permissions, and real interoperability remain pending validation on the target O
 Application-level fake transport tests cover group text routing, private and
 group file transfer, secure room-code PAKE, and live private/non-host group
 session resumption with single-use credentials. Native API lifecycle tests mock
-BlueZ, WinRT, and CoreBluetooth callbacks. The local suite currently has 60
+BlueZ, WinRT, and CoreBluetooth callbacks. The local suite currently has 61
 passing tests. Fake transport tests exercise host service restart, room-state
 retention, and timeout termination; platform lifecycle mocks exercise native
 failure signals. These tests do not certify real BLE recovery or cross-platform
