@@ -4,11 +4,11 @@ This tracker is authoritative for V1 software work. `DONE` requires passing auto
 
 ## Progress
 
-- Software goals DONE: 22 / 24 (91.7%); G18 and G24 remain in progress pending a Windows CLI smoke failure diagnosis and green rerun.
+- Software goals DONE: 24 / 24 (100%). Physical Bluetooth hardware validation is tracked separately.
 - Physical hardware validation: separately tracked; no combination may be inferred as passed.
-- Latest full local test run: 60 passed (2026-10-01). `ruff check .` and `mypy src/bluechat` pass.
+- Latest full local test run: 61 passed (2026-10-01). `ruff check .` and `mypy src/bluechat` pass.
 - Wheel and sdist rebuilt from the current tree; clean dependency-resolving installs and installed CLI smoke checks (`--version`, `--help`, `doctor`) pass on Intel macOS / Python 3.11.
-- Hosted run `36833658575` on commit `6098af2` passed all six lint, type-check, and pytest stages, all package builds, and all macOS/Ubuntu CLI checks. Windows 3.10 and 3.12 failed in the combined installed-command smoke step. GitHub's unauthenticated job-log endpoint returned HTTP 403; the user has been asked for that step output.
+- Hosted run `36835370206` on commit `e33c797` passed all six matrix jobs (Python 3.10 and 3.12 on Ubuntu, Windows, and macOS), including install, Ruff, mypy, pytest, wheel/sdist build, and separate `bluechat --version`, `bluechat --help`, and `bluechat doctor` smoke checks.
 
 ## Goals
 
@@ -233,15 +233,15 @@ Blockers: none identified.
 
 ### G18 Cross-platform CI validation
 
-Status: IN_PROGRESS
+Status: DONE
 
 Acceptance criteria:
-- [ ] CI completes install, Ruff, mypy, tests, package build, and CLI smoke commands on Linux, Windows, and macOS.
+- [x] CI completes install, Ruff, mypy, tests, package build, and CLI smoke commands on Linux, Windows, and macOS.
 - [x] Workflow configuration is valid and all locally available checks pass.
 
-Tests: `.github/workflows/ci.yml` runs an Ubuntu/Windows/macOS × Python 3.10/3.12 matrix. Run `36833658575` passed mypy, pytest, and builds everywhere; run `36834962327` isolated both Windows failures to `bluechat doctor`. A local `PYTHONIOENCODING=cp1252` reproduction exposed Rich's inability to encode the checkmark status glyph. The doctor now uses ASCII status labels, and a CP1252-output regression test passes.
-Notes: mypy has targeted `dbus_next` overrides, and the Linux-only lifecycle test skips when that platform dependency is absent. Local full tests (61), Ruff, and mypy pass. Latest fix is pushed; waiting for hosted green results.
-Blockers: green hosted results for the diagnostic-output fix are required. GitHub job-log download returns HTTP 403, so exact Windows output was not directly accessible.
+Tests: `.github/workflows/ci.yml` run `36835370206` passed all six Ubuntu/Windows/macOS × Python 3.10/3.12 jobs, including install, Ruff, mypy, pytest, package build, and all CLI smoke commands. Local full tests (61), Ruff, and mypy pass. A CP1252-output regression test reproduces and prevents the Windows diagnostics failure.
+Notes: mypy has targeted `dbus_next` overrides, and the Linux-only lifecycle test skips when that platform dependency is absent. The Windows doctor failure was an unencodable checkmark; diagnostics now use ASCII status labels.
+Blockers: none for software CI validation. Physical Bluetooth hardware validation remains separately pending.
 
 ### G19 Type-check validation
 
@@ -306,13 +306,13 @@ Blockers: none for documentation as of this cycle.
 
 ### G24 Final release checklist
 
-Status: IN_PROGRESS
+Status: DONE
 
 Acceptance criteria:
-- [ ] All implementable software goals are DONE.
+- [x] All implementable software goals are DONE.
 - [x] Full tests, Ruff, mypy, wheel/sdist builds, package install smoke, and locally available CI-equivalent checks pass.
 - [x] Version is appropriate; do not call stable 1.0.0 while required security/hardware criteria are pending.
 
-Tests: `python3 -m pytest -q` — 60 passed; Ruff — passed; mypy — passed (42 package files); wheel/sdist build and metadata checks — passed; clean Intel macOS wheel and sdist installs passed `bluechat --version`, `bluechat --help`, and `bluechat doctor`. Hosted CI run `36833658575`: all tests, lint, type checks, builds, and macOS/Ubuntu command checks passed; Windows command checks failed.
-Notes: `0.1.0` is an unpublished TestPyPI candidate named `bluechat-terminal` because the unrelated `bluechat` name is already taken on TestPyPI. The latest CI fixes the mypy and platform-specific test skips; the Windows CLI smoke issue is under investigation. Nine physical Bluetooth combinations remain pending. This is not a stable V1 release recommendation.
-Blockers: TestPyPI publication needs account credentials; Windows CLI failure diagnosis and G18 green rerun are required. Real Bluetooth hardware validation remains separately pending.
+Tests: `python3 -m pytest -q` — 61 passed; Ruff — passed; mypy — passed (42 package files); wheel/sdist build and metadata checks — passed; clean Intel macOS wheel and sdist installs passed `bluechat --version`, `bluechat --help`, and `bluechat doctor`. Hosted run `36835370206` passed all six OS/Python jobs, including CLI smoke commands.
+Notes: `0.1.0` is an unpublished TestPyPI candidate named `bluechat-terminal` because the unrelated `bluechat` name is already taken on TestPyPI. Nine physical Bluetooth combinations remain pending, so this is not a stable 1.0.0 release recommendation.
+Blockers: none for software implementation completion. Physical Bluetooth hardware validation remains pending and is tracked separately; publishing a new TestPyPI release requires the project's publishing credentials.
