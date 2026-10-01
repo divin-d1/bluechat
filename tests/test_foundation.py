@@ -1149,6 +1149,8 @@ def test_bluez_native_server_start_advertise_and_cleanup(monkeypatch) -> None:
 def test_bluez_gatt_rx_tx_and_disconnect_callbacks() -> None:
     import asyncio
     from types import SimpleNamespace
+
+    pytest.importorskip("dbus_next")
     from dbus_next import MessageType
     from bluechat.bluetooth.gatt import fragment_packet
     from bluechat.bluetooth.linux import BlueZGattServer

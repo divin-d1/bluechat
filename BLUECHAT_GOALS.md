@@ -239,8 +239,8 @@ Acceptance criteria:
 - [ ] CI completes install, Ruff, mypy, tests, package build, and CLI smoke commands on Linux, Windows, and macOS.
 - [x] Workflow configuration is valid and all locally available checks pass.
 
-Tests: `.github/workflows/ci.yml` has an Ubuntu/Windows/macOS × Python 3.10/3.12 matrix. The pushed run passed Ubuntu 3.10 and 3.12, but failed mypy on both macOS and Windows Python versions because `dbus_next` was missing from mypy's platform-neutral import overrides.
-Notes: targeted overrides for `dbus_next` and its submodules are now added. `mypy --python-executable /private/tmp/bluechat-terminal-wheel/bin/python src/bluechat` passes against a clean macOS dependency environment where `dbus_next` is absent; a new hosted matrix run is still required before marking DONE.
+Tests: `.github/workflows/ci.yml` has an Ubuntu/Windows/macOS × Python 3.10/3.12 matrix. Initial run failed macOS/Windows mypy because `dbus_next` was absent from platform-neutral import overrides. The next run cleared mypy but exposed one Linux-only test that imported `dbus_next` unconditionally.
+Notes: mypy now has targeted `dbus_next` overrides, and the Linux-only lifecycle test now skips when the Linux dependency is absent. `mypy --python-executable /private/tmp/bluechat-terminal-wheel/bin/python src/bluechat` passes with no `dbus_next`; simulated non-Linux pytest and a new hosted matrix run are required before marking DONE.
 Blockers: green hosted results for the rerun are required.
 
 ### G19 Type-check validation
